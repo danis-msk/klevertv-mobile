@@ -1,6 +1,8 @@
 ## Note
 
-The project is still under development. Tests not completed
+App for IPTV
+
+Tests not completed
 
 ## Available Scripts
 
