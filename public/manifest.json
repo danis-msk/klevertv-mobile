@@ -1,0 +1,16 @@
+{
+  "short_name": "KleverTV",
+  "name": "KleverTV",
+  "icons": [
+    {
+      "src": "assets/icon/logo_400x400.png",
+      "type": "image/png",
+      "sizes": "400x400",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff"
+}

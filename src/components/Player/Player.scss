@@ -1,0 +1,23 @@
+.player {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  &__video {
+    flex-shrink: 0;
+    width: 100%;
+    height: 200px;
+  }
+
+  &__epg {
+    flex-grow: 1;
+    overflow-y: scroll;
+  }
+}
+
+@media screen and (orientation:landscape) {
+  .player__epg {
+    display: none;
+  }
+}

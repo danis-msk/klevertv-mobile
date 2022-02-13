@@ -1,0 +1,43 @@
+.epg-item {
+  position: relative;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  padding: 7px 0;
+  padding-left: 10px;
+  overflow: hidden;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.play-now {
+    color: #45C75A;
+    .epg-item__live {
+      display: block;
+    }
+  }
+
+  &__time {
+    margin-right: 10px;
+  }
+
+  &__title {
+    line-height: 1.2;
+  }
+
+  &__live {
+    width: 60px;
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    line-height: 20px;
+    margin-top: -30px;
+    padding-left: 20px;
+    padding-right: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #45C75A;
+    display: none;
+  }
+}
