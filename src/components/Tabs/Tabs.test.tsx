@@ -7,7 +7,7 @@ import { Tabs } from './Tabs'
 describe('Tabs', () => {
   const pages = [{
     label: 'string',
-    href: 'string',
+    path: 'string',
     icon: 'string',
   }]
   

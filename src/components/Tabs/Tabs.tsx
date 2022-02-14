@@ -8,7 +8,7 @@ interface TabsProps {
 
 interface Page {
   label: string
-  href: string
+  path: string
   icon: string
 }
 
@@ -35,10 +35,10 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(({ pages }, ref) => {
       {pages.map((page: any, i: number) => (
         <TabsItem
           ref={(el: HTMLAnchorElement) => tabsItemsRef.current[i] = el}
-          href={page.href}
+          path={page.path}
           icon={page.icon}
           label={page.label}
-          key={page.href}
+          key={page.path}
         />
       ))}
     </div>

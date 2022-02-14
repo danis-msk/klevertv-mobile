@@ -41,26 +41,26 @@ export const App: FC = () => {
 
   interface Page {
     label: string
-    href: string
+    path: string
     icon: string
   }
 
   const pages: Page[] = [
     {
       label: 'Главная',
-      href: '/home',
+      path: '/home',
       icon: 'home',
     }, {
       label: 'Избранное',
-      href: '/favorites',
+      path: '/favorites',
       icon: 'favorites',
     }, {
       label: 'Поиск',
-      href: '/search',
+      path: '/search',
       icon: 'search',
     }, {
       label: 'Аккаунт',
-      href: '/account',
+      path: '/account',
       icon: 'account',
     },
   ]

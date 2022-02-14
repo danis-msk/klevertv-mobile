@@ -5,7 +5,7 @@ import store from '../../store/store'
 import { TabsItem } from './TabsItem'
 
 describe('TabsItem', () => {
-  const href = 'string'
+  const path = 'string'
   const icon = 'string'
   const label = 'string'
   
@@ -14,7 +14,7 @@ describe('TabsItem', () => {
       <Provider store={store}>
         <BrowserRouter>
           <TabsItem
-            href={href}
+            path={path}
             icon={icon}
             label={label}
           />
