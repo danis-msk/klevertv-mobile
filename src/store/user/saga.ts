@@ -11,6 +11,6 @@ function* fetchUser(): any {
   yield put(setUserData(data))
 }
 
-export function* watchFetchUser() {
+export function* watchLoadUserData() {
   yield takeEvery('load-user-data', fetchUser)
 }

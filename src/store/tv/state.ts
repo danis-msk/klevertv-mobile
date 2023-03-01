@@ -1,4 +1,4 @@
-interface Category {
+export interface Category {
   id: number
   playlist: string
   name: string
@@ -35,7 +35,7 @@ interface Favorites {
 export interface TvState {
   title: string
   url: string
-  categoriesArr: Category[]
+  categoryArr: Category[]
   categories: {[key: string]: Category}
   channels: {[key: string]: Channel}
   favorites: Favorites[]
@@ -48,7 +48,7 @@ export interface TvState {
 export const initialTvState: TvState = {
   title: 'Телеканалы',
   url: 'tv-channels',
-  categoriesArr: [
+  categoryArr: [
     {
       id: 0,
       playlist: '',

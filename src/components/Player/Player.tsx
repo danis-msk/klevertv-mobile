@@ -4,35 +4,37 @@ import { useAppDispatch, useAppSelector } from '../../hooks'
 import { setIdChannelPlayingNow } from '../../store/tv/action'
 import { EpgList } from '../EpgList/EpgList'
 import './Player.scss'
-
+import { useParams } from 'react-router-dom'
 
 interface PlayerProps {
-  match: any
   appRef: any
   headerRef: any
   tabsRef: any
 }
 
-export const Player: FC<PlayerProps> = ({ match, appRef, headerRef, tabsRef }) => {
+interface PlayerParams {
+  channelId: string
+}
+
+const Player: FC<PlayerProps> = ({ appRef, headerRef, tabsRef }) => {
   const dispatch = useAppDispatch()
-  
-  const { channelId } = match.params
+  const { channelId } = useParams<PlayerParams>()
   const mrl = useAppSelector(state => state['tv-channels'].channels[channelId].mrl) || ''
   const timeout = useRef<any>(null)
-  let fullScreen: boolean = false
+  const [fullScreen, setFullScreen] = React.useState(false)
   
   // скрыть хедер и табы
   const hiddenHeader = (): void => {
     headerRef?.classList.add('hidden')
     tabsRef?.classList.add('hidden')
-    fullScreen = true
+    setFullScreen(true)
   }
   
   // показать хедер и табы
   const visibleHeader = (): void => {
     headerRef?.classList.remove('hidden')
     tabsRef?.classList.remove('hidden')
-    fullScreen = false
+    setFullScreen(false)
   }
 
   // показать хедер и табы - скроются автоматически через 3 сек
@@ -63,7 +65,6 @@ export const Player: FC<PlayerProps> = ({ match, appRef, headerRef, tabsRef }) =
     clearTimeout(timeout.current)
     appRef?.removeEventListener('touchstart', toggleVisibleHeader)
   }
-
 
   // остановить плеер при сворачивании приложения
   useEffect(() => {
@@ -104,13 +105,14 @@ export const Player: FC<PlayerProps> = ({ match, appRef, headerRef, tabsRef }) =
     }
   }, [])
 
-
   return (
     <div className="player">
       <div className="player__video"></div>
       <div className="player__epg">
-        <EpgList channelId={channelId} />
+        <EpgList channelId={+channelId} />
       </div>
     </div>
   )
 }
+
+export default Player

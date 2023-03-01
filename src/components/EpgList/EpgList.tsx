@@ -10,23 +10,25 @@ interface EpgListProps {
 }
 
 export const EpgList: FC<EpgListProps> = ({ channelId }) => {
-  const epg = useAppSelector(state => state['tv-channels'].channels[channelId].epg)
+  const epg = useAppSelector(state => state['tv-channels'].channels[channelId]?.epg)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(getEpg(channelId))
-  }, [])
+    if (!epg) {
+      dispatch(getEpg(channelId))
+    }
+  }, [channelId, epg])
 
   return (
     <Link to={`/player/${channelId}`} className="epg-list">
-      {!epg.length && <div className="epg-list__no-epg">Программа передач для этого канала отсутствует</div> ||
-
-      epg.map((epgItem: any, i: number) => (epgItem.stop_ts * 1000 < Date.now()) && 
-        <EpgItem 
-          epg={epgItem} 
-          epgItemId={i} 
-          key={epgItem.start_ts+epgItem.title} 
-        />
+      {epg?.length ? (
+        epg.map((epgItem: any, i: number) =>
+          epgItem.stop_ts * 1000 < Date.now() ? (
+            <EpgItem epg={epgItem} epgItemId={i} key={epgItem.start_ts + epgItem.title} />
+          ) : null
+        )
+      ) : (
+        <div className="epg-list__no-epg">Программа передач для этого канала отсутствует</div>
       )}
     </Link>
   )

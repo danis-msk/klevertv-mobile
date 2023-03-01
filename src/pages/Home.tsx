@@ -2,10 +2,10 @@ import { FC } from 'react'
 import { CategoriesList } from '../components/CategoriesList/CategoriesList'
 
 interface HomeProps {
-  categoriesArr: any
+  categoryArr: any
 }
 
-export const Home: FC<HomeProps> = ({ categoriesArr }) => {
+export const Home: FC<HomeProps> = ({ categoryArr }) => {
   const sectionTitles = [
     {
       id: 1,
@@ -18,7 +18,7 @@ export const Home: FC<HomeProps> = ({ categoriesArr }) => {
       {sectionTitles.map(title => (
         <section key={title.id}>
           <div className="section-title container">{title.title}</div>
-          <CategoriesList categories={categoriesArr} />
+          <CategoriesList categories={categoryArr} />
         </section>
       ))}
     </>

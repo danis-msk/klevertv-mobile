@@ -10,7 +10,7 @@
     "@types/node": "^16.11.22",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
-    "node-sass": "^6.0.1",
+    "node-sass": "^8.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.5",
@@ -21,9 +21,11 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.191",
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.9",
     "jest-watch-typeahead": "^0.6.5",
+    "lodash": "^4.17.21",
     "typescript": "^4.4.3"
   },
   "scripts": {
@@ -41,12 +43,36 @@
       "react-app/jest"
     ],
     "rules": {
-      "semi": ["error", "never"],
-      "arrow-spacing": ["error", { "before": true, "after": true }],
-      "comma-spacing": ["error", { "before": false, "after": true }],
-      "jsx-quotes": ["error", "prefer-double"],
-      "object-curly-spacing": ["error", "always"],
-      "quotes": ["error", "single"]
+      "semi": [
+        "warn",
+        "never"
+      ],
+      "arrow-spacing": [
+        "warn",
+        {
+          "before": true,
+          "after": true
+        }
+      ],
+      "comma-spacing": [
+        "warn",
+        {
+          "before": false,
+          "after": true
+        }
+      ],
+      "jsx-quotes": [
+        "warn",
+        "prefer-double"
+      ],
+      "object-curly-spacing": [
+        "warn",
+        "always"
+      ],
+      "quotes": [
+        "warn",
+        "single"
+      ]
     }
   },
   "browserslist": {

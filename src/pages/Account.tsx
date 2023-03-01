@@ -2,7 +2,7 @@ import { FC, useEffect, useRef } from 'react'
 import { requestLogoutUser } from '../api/request'
 import { useAppSelector } from '../hooks'
 
-export const Account: FC = () => {
+const Account: FC = () => {
   const canUnregister = useAppSelector(state => state.user.features.can_unregister) || true
   const accountExitButton = useRef<HTMLDivElement>(null)
 
@@ -21,7 +21,10 @@ export const Account: FC = () => {
   return (
     <div className="account">
       {canUnregister &&
-      <div className="account__exit-button" ref={accountExitButton}>Выход</div>}
+        <div className="account__exit-button" ref={accountExitButton}>Выход</div>
+      }
     </div>
   )
 }
+
+export default Account

@@ -1,64 +1,59 @@
-import { FC, useEffect, useRef, useState } from 'react'
-import { useHistory } from 'react-router'
-import { Redirect, Route } from 'react-router-dom'
+import { FC, useEffect, useRef, useState, lazy, Suspense, useMemo } from 'react'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks'
-
 import { Home } from '../../pages/Home'
-import { Favorites } from '../../pages/Favorites'
-import { Search } from '../../pages/Search'
-import { Account } from '../../pages/Account'
-import { Login } from '../../pages/Login'
-import { Genres } from '../../pages/Genres'
-
 import { Header } from '../Header/Header'
 import { Tabs } from '../Tabs/Tabs'
-import { Player } from '../Player/Player'
-
 import { loadUserData } from '../../store/user/action'
 import { getPlaylists } from '../../store/tv/action'
-
 import { ReactComponent as FavoriteIconEmpty } from '../../assets/img/icons/star.svg'
 import { ReactComponent as FavoriteIconFilled } from '../../assets/img/icons/star-fill.svg'
-
-import { SESSION_ID } from '../../api/request'
-
+import { sessionId } from '../../api/request'
 import './App.scss'
+const Player = lazy(() => import('../Player/Player'))
+const Favorites = lazy(() => import('../../pages/Favorites'))
+const Search = lazy(() => import('../../pages/Search'))
+const Account = lazy(() => import('../../pages/Account'))
+const Login = lazy(() => import('../../pages/Login'))
+const Genres = lazy(() => import('../../pages/Genres'))
 
+export interface Page {
+  label: string
+  path: string
+  icon: string
+}
 
 export const App: FC = () => {
   const dispatch = useAppDispatch()
-  const history = useHistory()
-
   const appRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLElement>(null)
   const tabsRef = useRef<HTMLDivElement>(null)
-
   const userLoaded = useAppSelector(state => state.user.loaded)
-  const tvLoaded = useAppSelector(state => state['tv-channels'].loaded)
-  const categoriesArr = useAppSelector(state => state['tv-channels'].categoriesArr)
-
-  const [titles, setTitles] = useState({})
-
-  interface Page {
-    label: string
-    path: string
-    icon: string
-  }
-
+  const { loaded: tvLoaded, categoryArr } = useAppSelector(state => state['tv-channels'])
+  const [categoryTitles, setCategoryTitles] = useState<Record<string, string>>({})
+  const favoriteIcons = useMemo(() => ({
+    FavoriteIconEmpty,
+    FavoriteIconFilled,
+  }), [])
+  const spinner = <div className="spinner">Loading...</div>
+  
   const pages: Page[] = [
     {
       label: 'Главная',
       path: '/home',
       icon: 'home',
-    }, {
+    },
+    {
       label: 'Избранное',
       path: '/favorites',
       icon: 'favorites',
-    }, {
+    },
+    {
       label: 'Поиск',
       path: '/search',
       icon: 'search',
-    }, {
+    },
+    {
       label: 'Аккаунт',
       path: '/account',
       icon: 'account',
@@ -69,52 +64,69 @@ export const App: FC = () => {
     dispatch(loadUserData())
   }, [])
 
-  // наполнить массив заголовков - для страниц категорий тв
+  // set category titles
   useEffect(() => {
     if (!tvLoaded) return
-    const titles: {[key: string]: string} = {}
-    categoriesArr.forEach(cat => {
-      titles[cat.playlist] = cat.name
+    const categoryTitles: Record<string, string> = {}
+    categoryArr.forEach(cat => {
+      categoryTitles[cat.playlist] = cat.name
     })
-    setTitles(titles)
-  }, [tvLoaded])
+    setCategoryTitles(categoryTitles)
+  }, [tvLoaded, categoryArr])
 
-  // если пользователь авторизован ( SESSION_ID !== null ) получить контент, иначе показать окно регистрации
   useEffect(() => {
-    if (!userLoaded) return
-    if (SESSION_ID) {
-      dispatch(getPlaylists())
-    } else {
-      history.push('/login')
-    }
-  }, [userLoaded])
+    if (userLoaded || sessionId) dispatch(getPlaylists())
+  }, [userLoaded, sessionId])
 
-  if (!SESSION_ID) {
+  if (!userLoaded) return null
+
+  if (!sessionId) {
     return (
       <div className="App">
-        <Route path="/login" component={Login} exact />
+        <Switch>
+          <Route path="/login" component={Login} />
+          <Redirect to="/login" />
+        </Switch>
       </div>
     )
   }
 
-
   return (
     <div className="App" ref={appRef}>
-      <Header ref={headerRef} titles={titles} FavoriteIconEmpty={FavoriteIconEmpty} FavoriteIconFilled={FavoriteIconFilled} />
+      <Header
+        ref={headerRef}
+        categoryTitles={categoryTitles}
+        favoriteIcons={favoriteIcons}
+      />
 
       <main className="content">
-        <Route path="/" exact>
-          <Redirect to="/home" />
-        </Route>
-        <Route path="/login" exact>
-          <Redirect to="/home" />
-        </Route>
-        <Route path="/home" component={(props: any) => <Home {...props} categoriesArr={categoriesArr} />} exact />
-        <Route path="/genres/:section/:genre" component={Genres} exact />
-        <Route path="/favorites" component={Favorites} exact />
-        <Route path="/search" component={Search} exact />
-        <Route path="/account" component={Account} exact />
-        <Route path="/player/:channelId" component={(props: any) => <Player {...props} categoriesArr={categoriesArr} appRef={appRef.current} headerRef={headerRef.current} tabsRef={tabsRef.current} />} exact />
+        <Switch>
+          <Suspense fallback={spinner}>
+            <Route path="/home">
+              <Home categoryArr={categoryArr} />
+            </Route>
+            <Route path="/genres/:section/:genre">
+              <Genres />
+            </Route>
+            <Route path="/favorites">
+              <Favorites />
+            </Route>
+            <Route path="/search">
+              <Search />
+            </Route>
+            <Route path="/account">
+              <Account />
+            </Route>
+            <Route path="/player/:channelId">
+              <Player
+                appRef={appRef.current}
+                headerRef={headerRef.current}
+                tabsRef={tabsRef.current}
+              />
+            </Route>
+            <Redirect to="/home" />
+          </Suspense>
+        </Switch>
       </main>
       <Tabs ref={tabsRef} pages={pages} />
     </div>

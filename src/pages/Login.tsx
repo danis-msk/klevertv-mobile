@@ -2,7 +2,7 @@ import { FC, useEffect, useRef } from 'react'
 import { requestLoginUser, requestSendPassword } from '../api/request'
 import { storage } from '../api/storage'
 
-export const Login: FC = () => {
+const Login: FC = () => {
   const TIMER = 60
   const inputPhone = useRef<HTMLInputElement>(null)
   const inputPassword = useRef<HTMLInputElement>(null)
@@ -167,3 +167,5 @@ export const Login: FC = () => {
     </div>
   )
 }
+
+export default Login

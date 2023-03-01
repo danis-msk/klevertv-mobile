@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { EpgList } from '../EpgList/EpgList'
 import './MediaItem.scss'
 
-interface Channel {
+export interface Channel {
   id: number
   channel_id: number
   age_limit: number
@@ -22,7 +22,7 @@ interface MediaItemProps {
 }
 
 export const MediaItem: FC<MediaItemProps> = ({ channel }) => (
-  <div className="media-item" data-channel-id={channel.id}>
+  <div className="media-item" data-channel-id={channel.id} data-testid="media-item">
     <div className="media-item__header">
       <div className="media-item__header-icon">
         <img src={channel.logo} alt="icon" />

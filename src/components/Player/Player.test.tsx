@@ -2,7 +2,7 @@ import { render } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import store from '../../store/store'
-import { Player } from './Player'
+import Player from './Player'
 
 describe('Player', () => {
   const match = [{}]
@@ -14,7 +14,7 @@ describe('Player', () => {
     const { container } = render(
       <Provider store={store}>
         <BrowserRouter>
-          <Player match={match} appRef={appRef.current} headerRef={headerRef.current} tabsRef={tabsRef.current} />
+          <Player appRef={appRef.current} headerRef={headerRef.current} tabsRef={tabsRef.current} />
         </BrowserRouter>
       </Provider>
     )

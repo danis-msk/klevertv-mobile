@@ -1,34 +1,42 @@
 import { render } from '@testing-library/react'
-import { Provider } from 'react-redux'
-import { BrowserRouter } from 'react-router-dom'
-import store from '../../store/store'
-import { MediaItem } from './MediaItem'
+import { MediaItem, Channel } from './MediaItem'
+
+const channel: Channel = {
+  id: 1,
+  channel_id: 1,
+  age_limit: 1,
+  name: 'string',
+  mrl: 'string',
+  is_blocked: true,
+  is_subscribed: true,
+  mime_type: 'string',
+  timeshift_archive_length: 'string',
+  timeshift_url: 'string',
+  logo: 'string',
+  epg: {},
+}
 
 describe('MediaItem', () => {
-  const channel = {
-    id: 1,
-    channel_id: 1,
-    age_limit: 1,
-    name: 'string',
-    mrl: 'string',
-    is_blocked: true,
-    is_subscribed: true,
-    mime_type: 'string',
-    timeshift_archive_length: 'string',
-    timeshift_url: 'string',
-    logo: 'string',
-    epg: {}
-  }
+  it('should render channel logo and name', () => {
+    const { getByAltText, getByText } = render(<MediaItem channel={channel} />)
+    const logo = getByAltText('icon')
+    const name = getByText(channel.name)
 
-  it('MediaItem renders', () => {
-    const { container } = render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <MediaItem channel={channel} />
-        </BrowserRouter>
-      </Provider>
-    )
-    
-    expect(container).not.toBeEmptyDOMElement()
+    expect(logo).toBeInTheDocument()
+    expect(name).toBeInTheDocument()
+  })
+
+  it('should render EpgList', () => {
+    const { getByTestId } = render(<MediaItem channel={channel} />)
+    const epgList = getByTestId('epg-list')
+
+    expect(epgList).toBeInTheDocument()
+  })
+
+  it('should have data-channel-id attribute equal to channel id', () => {
+    const { container } = render(<MediaItem channel={channel} />)
+    const mediaItem = container.firstChild as HTMLElement
+
+    expect(mediaItem).toHaveAttribute('data-channel-id', channel.id.toString())
   })
 })

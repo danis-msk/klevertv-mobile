@@ -1,23 +1,23 @@
 import { forwardRef, useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router'
-
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { setFavorites } from '../../store/tv/action'
 import './Header.scss'
+import _ from 'lodash'
 
 interface HeaderProps {
-  titles: any
-  FavoriteIconEmpty: any
-  FavoriteIconFilled: any
+  categoryTitles: any
+  favoriteIcons: any
 }
 
-export const Header = forwardRef<HTMLElement, HeaderProps>(({ titles, FavoriteIconEmpty, FavoriteIconFilled }, ref) => {
+export const Header = forwardRef<HTMLElement, HeaderProps>(({ categoryTitles, favoriteIcons }, ref) => {
   const history = useHistory()
   const dispatch = useAppDispatch()
+  const { FavoriteIconEmpty, FavoriteIconFilled } = favoriteIcons
 
-  let favorites = useAppSelector(state => state['tv-channels'].favorites)
-  const channelId = useAppSelector(state => state['tv-channels'].idChannelPlayingNow) || ''
-  const channelName = useAppSelector(state => state['tv-channels'].channels[channelId].name) || ''
+  let favorites = useAppSelector((state) => state['tv-channels'].favorites)
+  const channelId = useAppSelector((state) => state['tv-channels'].idChannelPlayingNow) || ''
+  const channelName = useAppSelector((state) => state['tv-channels'].channels[channelId]?.name) || ''
 
   const [title, setTitle] = useState('')
   const [isPlayer, setIsPlayer] = useState(false)
@@ -25,7 +25,7 @@ export const Header = forwardRef<HTMLElement, HeaderProps>(({ titles, FavoriteIc
 
   const backButton = useRef<HTMLDivElement>(null)
   const favoriteButton = useRef<HTMLDivElement>(null)
-  
+
   const mediaForFavorites = { type: 'channel', media_id: +channelId, title: channelName }
 
   // показать/скрыть стрелку "назад"
@@ -43,8 +43,8 @@ export const Header = forwardRef<HTMLElement, HeaderProps>(({ titles, FavoriteIc
   const toggleTitle = (): void => {
     let title: string = channelName
     if (!isPlayer) {
-      for (let key in titles) {
-        if (history.location.pathname.includes(key)) title = titles[key]
+      for (let key in categoryTitles) {
+        if (history.location.pathname.includes(key)) title = categoryTitles[key]
       }
     }
     setTitle(title)
@@ -78,28 +78,24 @@ export const Header = forwardRef<HTMLElement, HeaderProps>(({ titles, FavoriteIc
     if (!isFavorite) {
       favorites.push(mediaForFavorites)
     }
-    dispatch(setFavorites(favorites))
+    dispatch(setFavorites(_.uniq(favorites)))
   }
 
   const goBack = (): void => {
     history.goBack()
   }
-
-
+    
   useEffect(() => {
     toggleVisibilityBackButton()
   }, [channelName])
-
+    
   useEffect(() => {
     setIsPlayer(history.location.pathname.includes('player') ? true : false)
     toggleTitle()
-  }, [titles, channelName])
-
+  }, [categoryTitles, channelName])
+  
   useEffect(() => {
     if (isPlayer) toggleFavoritesIcon()
-  })
-
-  useEffect(() => {
     const listen = history.listen(() => {
       setIsPlayer(history.location.pathname.includes('player') ? true : false)
       toggleVisibilityBackButton()
@@ -108,9 +104,7 @@ export const Header = forwardRef<HTMLElement, HeaderProps>(({ titles, FavoriteIc
     })
     return listen
   })
-
   
-
   return (
     <header className="header container" ref={ref}>
       <div className="header__back-button" onClick={goBack} ref={backButton}>{'<'}</div>
@@ -123,3 +117,9 @@ export const Header = forwardRef<HTMLElement, HeaderProps>(({ titles, FavoriteIc
     </header>
   )
 })
+
+export default Header
+      
+      
+      
+      

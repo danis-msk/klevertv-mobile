@@ -24,4 +24,27 @@ describe('TabsItem', () => {
     
     expect(container).not.toBeEmptyDOMElement()
   })
+
+  it('TabsItem has correct Link component', () => {
+    const { container } = render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <TabsItem
+            path={path}
+            icon={icon}
+            label={label}
+          />
+        </BrowserRouter>
+      </Provider>
+    )
+    
+    const link = container.querySelector('a.tabs-item')
+    expect(link).toHaveAttribute('/href', path)
+  
+    const iconElement = link?.querySelector(`.tabs-item__icon--${icon}`)
+    expect(iconElement).toBeInTheDocument()
+  
+    const labelElement = link?.querySelector('.tabs-item__label')
+    expect(labelElement?.textContent).toBe(label)
+  })
 })

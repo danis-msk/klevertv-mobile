@@ -1,15 +1,10 @@
 import React, { forwardRef, useEffect, useRef } from 'react'
 import { TabsItem } from '../TabsItem/TabsItem'
 import './Tabs.scss'
+import { Page } from '../App/App'
 
 interface TabsProps {
   pages: Page[]
-}
-
-interface Page {
-  label: string
-  path: string
-  icon: string
 }
 
 export const Tabs = forwardRef<HTMLDivElement, TabsProps>(({ pages }, ref) => {

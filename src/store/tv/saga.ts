@@ -11,15 +11,16 @@ const URL_CHANNEL_LOGO = 'https://go.klever.tv/icons/channels/'
 function* getPlaylists(): any {
   yield put(setTvLoaded(false))
   const data = yield call(requestPlaylists)
+  if (!data) return
   const channelsArr = data.medialist
   const state = {
     ...initialTvState,
-    categoriesArr: data.playlists,
+    categoryArr: data.playlists,
     favorites: data.favorites,
     currentTs: data.current_ts,
     updated: data.updated,
   }
-  state.categoriesArr.forEach((cat: any) => {
+  state.categoryArr.forEach((cat: any) => {
     delete cat.logo
     cat.icon = createUrlCategoryIcon(cat.playlist)
     state.categories[cat.playlist] = cat

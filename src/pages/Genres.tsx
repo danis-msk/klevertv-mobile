@@ -1,13 +1,15 @@
 import { FC, useEffect, useState } from 'react'
 import { MediaList } from '../components/MediaList/MediaList'
 import { useAppSelector } from '../hooks'
+import { useParams } from 'react-router-dom'
 
-interface GenresProps {
-  match: any
+interface GenresParams {
+  section: string
+  genre: string
 }
 
-export const Genres: FC<GenresProps> = ({ match }) => {
-  const { section, genre } = match.params
+const Genres: FC = () => {
+  const { section, genre } = useParams<GenresParams>()
   const channelsAll = useAppSelector(state => state['tv-channels'].channels)
   const [channels, setChannels] = useState([])
   const categories = useAppSelector((state: any) => state[section].categories)
@@ -24,3 +26,5 @@ export const Genres: FC<GenresProps> = ({ match }) => {
     <MediaList channels={channels} genre={genre} />
   )
 }
+
+export default Genres

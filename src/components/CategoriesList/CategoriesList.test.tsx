@@ -27,4 +27,18 @@ describe('CategoriesList', () => {
 
     expect(container).not.toBeEmptyDOMElement()
   })
+
+  it('Renders CategoriesItem for each category', () => {
+    render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <CategoriesList categories={categories} />
+        </BrowserRouter>
+      </Provider>
+    )
+  
+    categories.forEach(category => {
+      expect(screen.getByText(category.name)).toBeInTheDocument()
+    })
+  }) 
 })

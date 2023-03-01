@@ -1,17 +1,10 @@
 import { FC } from 'react'
 import { CategoriesItem } from '../CategoriesItem/CategoriesItem'
 import './CategoriesList.scss'
-
-interface category {
-  id: number
-  playlist: string
-  name: string
-  icon: string
-  items: number[]
-}
+import { Category } from '../../store/tv/state'
 
 interface CategoriesProps {
-  categories: category[]
+  categories: Category[]
 }
 
 export const CategoriesList: FC<CategoriesProps> = ({ categories }) => (
@@ -21,7 +14,7 @@ export const CategoriesList: FC<CategoriesProps> = ({ categories }) => (
         playlist={cat.playlist}
         name={cat.name}
         icon={cat.icon}
-        key={cat.icon + Math.random()}
+        key={cat.icon + cat.name}
       />
     )}
   </div>

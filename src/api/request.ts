@@ -2,8 +2,6 @@ import { getDeviceId, getDeviceMAC } from './device'
 import { storage } from './storage'
 
 const URL_REQUEST = 'https://go.klever.tv/jsonrpc-v2'
-export let SESSION_ID: string | null = null
-
 
 const getMAC = (): string => {
   let mac = storage.getItem('mac')
@@ -16,16 +14,18 @@ const getMAC = (): string => {
 
 const post = async (method: string, params?: object) => {
   try {
-    const paramsFetch = SESSION_ID ? { 'session_id': SESSION_ID, ...params } : params
+    const paramsFetch = sessionId ? { 'SESSION_ID': sessionId, ...params } : params
     const response = await fetch(URL_REQUEST, {
       method: 'POST',
       body: JSON.stringify({
         'jsonrpc': '2.0',
         'method': method,
         'params': paramsFetch,
-      }),
+      })
     })
-    return response.json()
+    if (response.status === 200) {
+      return response.json()
+    }
   } catch (e) {
     console.log(e)
   }
@@ -56,13 +56,13 @@ export const requestLogoutUser = async () => {
     serial_number: getDeviceId(),
   }
   await post('unregister_terminal', params)
-  SESSION_ID = null
+  sessionId = null
 }
 
 export const requestUserData = async () => {
   const response = await post('login', { 'macaddr': getMAC() }) || {}
   if (!response.result) return
-  SESSION_ID = response.result.session_id
+  sessionId = response.result.session_id
   return response.result.account_features
 }
 
@@ -78,7 +78,7 @@ export const requestEpg = async (mediaId: number) => {
     stop_ts: Math.round(Date.now() / 1000) + 12 * 3600,
   }
   const response = await post('get_epg', params)
-  return response.result
+  return response ? response.result : {programs: []}
 }
 
 export const requestGetFavorites = async () => {
@@ -94,3 +94,4 @@ export const requestSetFavorites = async (favorites: any) => {
   return response.result
 }
 
+export let sessionId: string | null = null
